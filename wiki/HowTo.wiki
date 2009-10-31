@@ -1,4 +1,4 @@
-Setup Instructions:
+  Setup Instructions:
 
 1.Download the files (4 files and a folder) from downloads page.
 
@@ -16,15 +16,17 @@ Tipically you should set the source website 2 domains TARGET_URL_SHORTER and PRO
 
 About memcache: Google Appengine memcache have a relatively high performance - within 10 ms delay and very fast speed. Theoretically memcache would be kept forever. while during my trial , it could keeps about 1 day or several days. The expire time is set as long as possible as default. You can also modify the expire time by add a argument to the memcache.set() function. for example: edu.py:193: if not memcache.set(item, to_be_cached, 2600):  means keep the memcache item for 1 hour.（memcache如果不设置过期一般也只有1天或几天。）
 
+Demo: Due to GFW, I deleted the dns item pointing to GAE, you could visit http://lostriver-net.appspot.com/ to see the performance.
+
 About administration: Visit http://APP_ID.appspot.com/cachecontrol.py or http://PROXY_SER_URL/cachecontrol.py。then login. Administrators did not use memcache, instead, they fetch from the source every time.
 
-      The first textarea you type /pageid to view or delete the memcache, returns None when cache does not exist. Do not forget the prefix'/'. 'Clear' means to clear ALL THE MEMCACHE including pending posts mentioned below.
+      The first textarea you type /pageid to view or delete the memcache, returns None when cache does not exist. Do not forget the prefix'/'. 'Clear' means to clear ALL THE MEMCACHE including pending posts mentioned below.（要管理某个网页缓存，只需要输入/pageid）
 
       Accesslog gives a quick but not so accurate view to recent access, in nearly Apache accesslog. Uses memcache to store the date. It is not encoded into HTML so do not show very well in some browers. Try to view the webpage source in your brower.
 
-      Click ViewPendingPost those POST did not accomplete due to network errors is listed. Click the number to retry the POST. Click DeletePendingPost means deleting ALL PENDINGPOSTS. Anyway, it is not very stable to store pending posts into memcache. If possible I would turn to datebase.
+      Click ViewPendingPost those POST did not accomplete due to network errors is listed. Click the number to retry the POST. Click DeletePendingPost means deleting ALL PENDINGPOSTS. Anyway, it is not very stable to store pending posts into memcache. If possible I would turn to datebase.（用memcache保存了未完成的POST，点击条目可以手动完成）
 
-      Shortlink:in the first input area you input sth like S123 then in paste the URI in the right textarea including "http://" prefix. Then visit http://SHORTLINK_URL/S123 would return the URI by a 302 relocation. here I have http://s.lostriver.net// Visit shortlinks does not exist would show a page which show your shortlink history.
+      Shortlink:in the first input area you input sth like jiql then in paste the URI in the right textarea including "http://" prefix. Then visit http://SHORTLINK_URL/jiql would return the URI by a 302 relocation. here I have http://s.lostriver.net// Visit shortlinks does not exist would show a page which show your shortlink history.（两个框分别输入段网址名和包含http://前缀的目标地址，如果有人访问不存在的地址，404页是短网址的历史纪录。）
 
 PROBLEMS AND BUGS:
-There are many many bugs in cachecontrol.py, anyway it is not very important. The primary problem is the fetch server error, mainly caused by 3 reason: The delay between the source site and GAE is too long, and the bandwidth is too slow. In addition, Google limit the fetch content to 1MB. All these problems have solutions now but I didnot bring it into true. Large files could break into small pieces through the HTTP range header. Use rpc fetch service to fetch all the pieces and combine them into one item, cache it and response it. I would accomplish it later or never. If you are interested in the reverse proxy , you can join in and contribute it. 
+There are many many bugs in cachecontrol.py, anyway it is not very important. The primary problem is the fetch server error, mainly caused by 3 reason: The delay between the source site and GAE is too long, and the bandwidth is too slow. In addition, Google limit the fetch content to 1MB. All these problems have solutions now but I didnot bring it into true. Large files could break into small pieces through the HTTP range header. Use rpc fetch service to fetch all the pieces and combine them into one item, cache it and response it. I would accomplish it later or never. If you are interested in the reverse proxy , you can join in and contribute it. （网速慢会出错，超过1M会出错，可以通过rpc分段请求完成，完善方向。）
